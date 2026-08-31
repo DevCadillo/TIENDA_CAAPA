@@ -1,162 +1,336 @@
+// =====================================================
+// TIENDA CAAPA - JavaScript general
+// =====================================================
+
+
+// =====================================================
+// MODAL DE STOCK
+// =====================================================
+
 const stockModal = document.getElementById('stockModal');
+
 if (stockModal) {
-  stockModal.addEventListener('show.bs.modal', event => {
-    const b = event.relatedTarget;
-    document.getElementById('stockForm').action = `/productos/${b.dataset.id}/stock`;
-    document.getElementById('stockProduct').textContent = b.dataset.name;
-  });
+
+    stockModal.addEventListener('show.bs.modal', event => {
+
+        const button = event.relatedTarget;
+
+        const stockForm =
+            document.getElementById('stockForm');
+
+        const stockProduct =
+            document.getElementById('stockProduct');
+
+
+        if (stockForm && button) {
+
+            stockForm.action =
+                `/productos/${button.dataset.id}/stock`;
+
+        }
+
+
+        if (stockProduct && button) {
+
+            stockProduct.textContent =
+                button.dataset.name;
+
+        }
+
+    });
+
 }
-const chart = document.getElementById('categoryChart');
+
+
+
+// =====================================================
+// GRÁFICO DEL DASHBOARD
+// =====================================================
+
+const chart =
+    document.getElementById('categoryChart');
+
 if (chart && window.Chart) {
-  new Chart(chart, { type:'bar', data:{ labels:JSON.parse(chart.dataset.labels||'[]'), datasets:[{label:'Unidades',data:JSON.parse(chart.dataset.values||'[]')}] }, options:{responsive:true,plugins:{legend:{display:false}}} });
+
+    new Chart(chart, {
+
+        type: 'bar',
+
+        data: {
+
+            labels:
+                JSON.parse(
+                    chart.dataset.labels || '[]'
+                ),
+
+            datasets: [
+                {
+                    label: 'Unidades',
+
+                    data:
+                        JSON.parse(
+                            chart.dataset.values || '[]'
+                        )
+                }
+            ]
+
+        },
+
+        options: {
+
+            responsive: true,
+
+            plugins: {
+
+                legend: {
+                    display: false
+                }
+
+            }
+
+        }
+
+    });
+
 }
 
 
-document.addEventListener('DOMContentLoaded', () => {
 
-    const table = document.getElementById('productsTable');
+// =====================================================
+// BUSCADOR Y FILTRO DE PRODUCTOS
+// =====================================================
 
-    if (!table) {
-        return;
-    }
+document.addEventListener(
+    'DOMContentLoaded',
+    function () {
 
-    const searchInput =
-        document.getElementById('productSearch');
+        const table =
+            document.getElementById('productsTable');
 
-    const categoryFilter =
-        document.getElementById('categoryFilter');
+        const searchInput =
+            document.getElementById('searchInput');
 
-    const rows = Array.from(
-        table.querySelectorAll('tbody tr')
-    );
+        const categoryFilter =
+            document.getElementById('categoryFilter');
 
-    /*
-     * Columnas esperadas:
-     *
-     * 0 Imagen
-     * 1 Número
-     * 2 Producto
-     * 3 Categoría
-     * 4 Stock
-     * 5 Precio mayor
-     * 6 Precio unitario
-     */
 
-    if (categoryFilter) {
+        // Si no estamos en la página de productos,
+        // simplemente no hacemos nada.
+        if (!table) {
+            return;
+        }
 
-        const categories = new Set();
 
-        rows.forEach(row => {
+        const rows =
+            Array.from(
+                table.querySelectorAll(
+                    'tbody .product-row'
+                )
+            );
 
-            const cells = row.querySelectorAll('td');
 
-            if (cells.length > 3) {
+
+        // =================================================
+        // CARGAR AUTOMÁTICAMENTE LAS CATEGORÍAS
+        // =================================================
+
+        if (categoryFilter) {
+
+            const categories = new Set();
+
+
+            rows.forEach(row => {
+
+                const categoryElement =
+                    row.querySelector(
+                        '.product-category'
+                    );
+
+
+                if (!categoryElement) {
+                    return;
+                }
+
 
                 const category =
-                    cells[3].textContent.trim();
+                    categoryElement
+                        .textContent
+                        .trim();
 
-                if (category) {
+
+                if (
+                    category &&
+                    category !== '-'
+                ) {
+
                     categories.add(category);
+
                 }
-            }
-
-        });
-
-        Array.from(categories)
-            .sort()
-            .forEach(category => {
-
-                const option =
-                    document.createElement('option');
-
-                option.value =
-                    category.toLowerCase();
-
-                option.textContent =
-                    category;
-
-                categoryFilter.appendChild(option);
 
             });
-    }
 
 
-    function filterProducts() {
+            Array.from(categories)
+                .sort((a, b) =>
+                    a.localeCompare(b)
+                )
+                .forEach(category => {
 
-        const search =
-            searchInput
-                ? searchInput.value
+                    const option =
+                        document.createElement(
+                            'option'
+                        );
+
+                    option.value =
+                        category.toLowerCase();
+
+                    option.textContent =
+                        category;
+
+                    categoryFilter.appendChild(
+                        option
+                    );
+
+                });
+
+        }
+
+
+
+        // =================================================
+        // FUNCIÓN PRINCIPAL DE FILTRADO
+        // =================================================
+
+        function filterProducts() {
+
+            const search =
+                searchInput
+                    ? searchInput
+                        .value
+                        .trim()
+                        .toLowerCase()
+                    : '';
+
+
+            const selectedCategory =
+                categoryFilter
+                    ? categoryFilter
+                        .value
+                        .trim()
+                        .toLowerCase()
+                    : '';
+
+
+            rows.forEach(row => {
+
+                const productName =
+                    row.querySelector(
+                        '.product-name'
+                    )
+                    ?.textContent
                     .trim()
-                    .toLowerCase()
-                : '';
-
-        const category =
-            categoryFilter
-                ? categoryFilter.value
-                : '';
-
-
-        rows.forEach(row => {
-
-            const cells =
-                row.querySelectorAll('td');
-
-            if (!cells.length) {
-                return;
-            }
-
-
-            const number =
-                cells[1]?.textContent
                     .toLowerCase() || '';
 
-            const product =
-                cells[2]?.textContent
-                    .toLowerCase() || '';
 
-            const rowCategory =
-                cells[3]?.textContent
+                const productNumber =
+                    row.querySelector(
+                        '.product-number'
+                    )
+                    ?.textContent
                     .trim()
                     .toLowerCase() || '';
 
 
-            const matchesSearch =
-                number.includes(search) ||
-                product.includes(search);
+                const productCategory =
+                    row.querySelector(
+                        '.product-category'
+                    )
+                    ?.textContent
+                    .trim()
+                    .toLowerCase() || '';
 
 
-            const matchesCategory =
-                !category ||
-                rowCategory === category;
+
+                // Coincidencia de búsqueda
+                const matchesSearch =
+
+                    productName.includes(search) ||
+
+                    productNumber.includes(search);
 
 
-            row.style.display =
-                matchesSearch && matchesCategory
-                    ? ''
-                    : 'none';
 
-        });
+                // Coincidencia de categoría
+                const matchesCategory =
+
+                    selectedCategory === '' ||
+
+                    productCategory ===
+                    selectedCategory;
+
+
+
+                // Mostrar u ocultar fila
+                if (
+                    matchesSearch &&
+                    matchesCategory
+                ) {
+
+                    row.style.display = '';
+
+                } else {
+
+                    row.style.display = 'none';
+
+                }
+
+            });
+
+        }
+
+
+
+        // =================================================
+        // BUSCAR AUTOMÁTICAMENTE AL ESCRIBIR
+        // =================================================
+
+        if (searchInput) {
+
+            searchInput.addEventListener(
+                'input',
+                filterProducts
+            );
+
+        }
+
+
+
+        // =================================================
+        // FILTRAR CUANDO CAMBIA LA CATEGORÍA
+        // =================================================
+
+        if (categoryFilter) {
+
+            categoryFilter.addEventListener(
+                'change',
+                filterProducts
+            );
+
+        }
+
+
+
+        // =================================================
+        // HACER LA FUNCIÓN DISPONIBLE PARA EL BOTÓN
+        // =================================================
+
+        window.filterProducts =
+            filterProducts;
+
+
+
+        // Aplicar filtro inicial
+        filterProducts();
 
     }
-
-
-    if (searchInput) {
-
-        searchInput.addEventListener(
-            'input',
-            filterProducts
-        );
-
-    }
-
-
-    if (categoryFilter) {
-
-        categoryFilter.addEventListener(
-            'change',
-            filterProducts
-        );
-
-    }
-
-});
+);

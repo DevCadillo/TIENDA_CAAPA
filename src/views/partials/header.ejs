@@ -1,0 +1,18 @@
+<!doctype html><html lang="es"><head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title><%= title %> | Inventario</title>
+<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/css/bootstrap.min.css" rel="stylesheet">
+<link rel="stylesheet" href="/css/app.css">
+</head><body>
+<% if (user) { %>
+<nav class="navbar navbar-expand-lg navbar-dark bg-dark shadow-sm"><div class="container">
+<a class="navbar-brand fw-bold" href="/dashboard">📦 Inventario</a>
+<button class="navbar-toggler" data-bs-toggle="collapse" data-bs-target="#nav"><span class="navbar-toggler-icon"></span></button>
+<div class="collapse navbar-collapse" id="nav"><div class="navbar-nav me-auto">
+<a class="nav-link" href="/dashboard">Dashboard</a><a class="nav-link" href="/productos">Productos</a>
+<% if (user.rol === 'admin') { %><a class="nav-link" href="/usuarios">Empleados</a><% } %>
+</div><span class="navbar-text me-3"><%= user.nombre %> · <%= user.rol %></span>
+<form method="post" action="/logout"><button class="btn btn-outline-light btn-sm">Salir</button></form>
+</div></div></nav>
+<% } %>
+<main class="container py-4">

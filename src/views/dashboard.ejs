@@ -1,0 +1,14 @@
+<%- include('partials/header') %>
+<div class="d-flex justify-content-between align-items-center mb-4"><div><h1 class="h3 fw-bold mb-1">Dashboard</h1><p class="text-secondary mb-0">Resumen del inventario actual.</p></div>
+<% if(user.rol==='admin'){ %><a href="/productos/nuevo" class="btn btn-primary">+ Nuevo producto</a><% } %></div>
+<div class="row g-3 mb-4">
+<% [['Productos',stats.total,'📦'],['Disponibles',stats.disponibles,'✅'],['Poco stock',stats.poco_stock,'⚠️'],['Sin stock',stats.sin_stock,'❌']].forEach(x=>{ %>
+<div class="col-6 col-lg-3"><div class="card stat-card h-100 shadow-sm border-0"><div class="card-body"><div class="fs-3"><%= x[2] %></div><div class="display-6 fw-bold"><%= x[1] %></div><div class="text-secondary"><%= x[0] %></div></div></div></div><% }) %>
+</div>
+<div class="row g-4"><div class="col-lg-7"><div class="card shadow-sm border-0"><div class="card-body"><h2 class="h5">Stock por categoría</h2><canvas id="categoryChart" data-labels='<%- JSON.stringify(categoryData.map(x=>x.categoria)) %>' data-values='<%- JSON.stringify(categoryData.map(x=>x.stock)) %>'></canvas></div></div></div>
+<div class="col-lg-5"><div class="card shadow-sm border-0 h-100"><div class="card-body"><h2 class="h5">Productos con poco stock</h2>
+<% if(!lowStock.length){ %><p class="text-secondary">No hay alertas.</p><% } %><div class="list-group list-group-flush"><% lowStock.forEach(p=>{ %><div class="list-group-item px-0 d-flex justify-content-between"><span><%= p.nombre %></span><strong><%= p.cantidad %> / mín. <%= p.stock_minimo %></strong></div><% }) %></div></div></div></div></div>
+<% if(user.rol==='admin'){ %><div class="card shadow-sm border-0 mt-4"><div class="card-body"><h2 class="h5">Movimientos recientes</h2><div class="table-responsive"><table class="table align-middle"><thead><tr><th>Fecha</th><th>Producto</th><th>Tipo</th><th>Cantidad</th><th>Stock</th><th>Usuario</th></tr></thead><tbody>
+<% recent.forEach(m=>{ %><tr><td><%= new Date(m.creado_en).toLocaleString('es-BO') %></td><td><%= m.producto %></td><td><span class="badge text-bg-<%= m.tipo==='entrada'?'success':'warning' %>"><%= m.tipo %></span></td><td><%= m.cantidad %></td><td><%= m.stock_anterior %> → <%= m.stock_nuevo %></td><td><%= m.usuario || '-' %></td></tr><% }) %>
+</tbody></table></div></div></div><% } %>
+<%- include('partials/footer') %>

@@ -1,1 +1,291 @@
 body{background:#f5f7fb}.login-page{min-height:100vh;display:grid;place-items:center;padding:20px;background:linear-gradient(135deg,#eef2ff,#f8fafc)}.login-card{width:min(100%,430px);border-radius:22px}.stat-card{border-radius:18px}.card{border-radius:16px}.product-thumb{width:56px;height:56px;object-fit:cover;border-radius:12px}.product-placeholder{width:56px;height:56px;display:grid;place-items:center;border-radius:12px;background:#eef1f5;font-size:24px}.table td,.table th{vertical-align:middle}canvas{max-height:330px}
+
+
+/* =====================================================
+   TIENDA CAAPA - COLORES
+   ===================================================== */
+
+:root {
+    --caapa-primary: #166534;
+    --caapa-secondary: #22c55e;
+    --caapa-dark: #14532d;
+    --caapa-light: #f0fdf4;
+    --caapa-accent: #f59e0b;
+    --caapa-background: #f8fafc;
+    --caapa-text: #1f2937;
+}
+
+body {
+    background-color: var(--caapa-background);
+    color: var(--caapa-text);
+}
+
+/* Barra superior */
+.navbar,
+.navbar.bg-dark {
+    background: linear-gradient(
+        135deg,
+        var(--caapa-dark),
+        var(--caapa-primary)
+    ) !important;
+}
+
+/* Nombre de la tienda */
+.navbar-brand {
+    font-weight: 800;
+    letter-spacing: 0.5px;
+    color: #ffffff !important;
+}
+
+/* Botones principales */
+.btn-primary {
+    background-color: var(--caapa-primary) !important;
+    border-color: var(--caapa-primary) !important;
+}
+
+.btn-primary:hover {
+    background-color: var(--caapa-dark) !important;
+    border-color: var(--caapa-dark) !important;
+}
+
+.btn-success {
+    background-color: var(--caapa-secondary) !important;
+    border-color: var(--caapa-secondary) !important;
+}
+
+/* Tarjetas */
+.card {
+    border: none;
+    border-radius: 14px;
+    box-shadow: 0 3px 14px rgba(0, 0, 0, 0.07);
+}
+
+.card-header {
+    font-weight: 600;
+}
+
+/* Tabla */
+.table thead th {
+    background-color: var(--caapa-dark);
+    color: white;
+    border-color: var(--caapa-dark);
+}
+
+.table tbody tr:hover {
+    background-color: var(--caapa-light);
+}
+
+/* Formularios */
+.form-control:focus,
+.form-select:focus {
+    border-color: var(--caapa-secondary);
+    box-shadow: 0 0 0 0.2rem rgba(34, 197, 94, 0.18);
+}
+
+/* Títulos */
+h1,
+h2,
+h3,
+h4,
+h5 {
+    color: var(--caapa-dark);
+}
+
+/* Badges */
+.badge.bg-success {
+    background-color: var(--caapa-secondary) !important;
+}
+
+
+/* =====================================================
+   REPORTE / IMPRESIÓN
+   ===================================================== */
+
+@media print {
+
+    body {
+        background: white !important;
+        color: black !important;
+    }
+
+    .navbar,
+    .sidebar,
+    .no-print,
+    .btn,
+    form,
+    footer {
+        display: none !important;
+    }
+
+    .container,
+    .container-fluid {
+        width: 100% !important;
+        max-width: 100% !important;
+        margin: 0 !important;
+        padding: 0 !important;
+    }
+
+    .card {
+        box-shadow: none !important;
+        border: none !important;
+    }
+
+    table {
+        width: 100% !important;
+        font-size: 12px;
+    }
+
+    .table thead th {
+        background: #eeeeee !important;
+        color: black !important;
+        border: 1px solid #999 !important;
+    }
+
+    .table td {
+        border: 1px solid #cccccc !important;
+    }
+
+    /* No imprimir filas filtradas */
+    tbody tr[style*="display: none"] {
+        display: none !important;
+    }
+
+}
+
+/* =====================================================
+   FONDO ANIMADO - TIENDA CAAPA
+   ===================================================== */
+
+body {
+    position: relative;
+    min-height: 100vh;
+    overflow-x: hidden;
+    background:
+        radial-gradient(circle at 20% 20%, rgba(34, 197, 94, 0.10), transparent 35%),
+        radial-gradient(circle at 80% 30%, rgba(22, 101, 52, 0.10), transparent 35%),
+        linear-gradient(135deg, #f8fafc, #f0fdf4);
+}
+
+/* Capa animada detrás del contenido */
+body::before {
+    content: "";
+    position: fixed;
+    inset: 0;
+    z-index: -2;
+
+    background-image:
+        linear-gradient(
+            rgba(22, 101, 52, 0.05) 1px,
+            transparent 1px
+        ),
+        linear-gradient(
+            90deg,
+            rgba(22, 101, 52, 0.05) 1px,
+            transparent 1px
+        );
+
+    background-size: 45px 45px;
+
+    animation: caapaCircuitMove 18s linear infinite;
+}
+
+/* Luces flotantes */
+body::after {
+    content: "";
+    position: fixed;
+    width: 500px;
+    height: 500px;
+    top: -180px;
+    right: -180px;
+
+    border-radius: 50%;
+
+    background:
+        radial-gradient(
+            circle,
+            rgba(34, 197, 94, 0.16),
+            rgba(34, 197, 94, 0.03) 50%,
+            transparent 70%
+        );
+
+    z-index: -1;
+
+    animation: caapaFloat 8s ease-in-out infinite alternate;
+}
+
+
+/* Movimiento de la cuadrícula */
+@keyframes caapaCircuitMove {
+
+    from {
+        background-position:
+            0 0,
+            0 0;
+    }
+
+    to {
+        background-position:
+            45px 45px,
+            45px 45px;
+    }
+
+}
+
+
+/* Movimiento de luz */
+@keyframes caapaFloat {
+
+    from {
+        transform:
+            translate(0, 0)
+            scale(1);
+    }
+
+    to {
+        transform:
+            translate(-120px, 120px)
+            scale(1.25);
+    }
+
+}
+
+
+/* Tarjetas ligeramente transparentes */
+.card {
+    background: rgba(255, 255, 255, 0.94);
+    backdrop-filter: blur(5px);
+    -webkit-backdrop-filter: blur(5px);
+}
+
+
+/* Navbar encima del fondo */
+.navbar {
+    position: relative;
+    z-index: 10;
+}
+
+
+/* Reduce animaciones si el dispositivo lo solicita */
+@media (prefers-reduced-motion: reduce) {
+
+    body::before,
+    body::after {
+        animation: none !important;
+    }
+
+}
+
+
+/* No mostrar fondo decorativo en PDF */
+@media print {
+
+    body::before,
+    body::after {
+        display: none !important;
+    }
+
+    body {
+        background: white !important;
+    }
+
+}

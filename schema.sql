@@ -70,6 +70,7 @@ CREATE INDEX IF NOT EXISTS "IDX_session_expire" ON "session" ("expire");
 INSERT INTO categorias (nombre) VALUES
 ('Bebidas'), ('Abarrotes'), ('Limpieza'), ('Golosinas'), ('Otros')
 ON CONFLICT (nombre) DO NOTHING;
+<<<<<<< HEAD
 
 -- =========================================================
 -- MÓDULO PROVEEDORES / LUGARES DE COMPRA
@@ -99,3 +100,5 @@ CREATE TABLE IF NOT EXISTS proveedores_producto (
 CREATE INDEX IF NOT EXISTS idx_proveedores_producto_producto ON proveedores_producto(producto_id);
 CREATE INDEX IF NOT EXISTS idx_proveedores_producto_lugar ON proveedores_producto(lugar);
 CREATE INDEX IF NOT EXISTS idx_proveedores_producto_precio ON proveedores_producto(precio_compra);
+=======
+>>>>>>> fb5b3b6ce7b41d4879e6287e9c2b3b53e4ddcf05

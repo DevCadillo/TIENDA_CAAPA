@@ -44,6 +44,7 @@ npm run dev
 - Start Command: `npm start`
 - Agrega las variables de `.env` en Environment de Render.
 - Define `NODE_ENV=production`.
+<<<<<<< HEAD
 
 ## Módulo Proveedores / lugares de compra
 Se añadió una pestaña **Proveedores** sin modificar las columnas ni los registros existentes de `productos`.
@@ -68,3 +69,5 @@ Ese script crea solo la tabla e índices del nuevo módulo y no borra ni cambia 
 
 ### Importante sobre ubicación
 La geolocalización del navegador funciona en `localhost` y en sitios HTTPS. En producción (Render u otro hosting) debes entrar por HTTPS y permitir ubicación en el navegador/celular.
+=======
+>>>>>>> fb5b3b6ce7b41d4879e6287e9c2b3b53e4ddcf05

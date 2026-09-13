@@ -36,11 +36,17 @@ app.use((req, res, next) => {
 });
 
 app.get('/', (req, res) => res.redirect(req.session.user ? '/dashboard' : '/login'));
+<<<<<<< HEAD
 app.use(require('./routes/mobile-api'));
 app.use(require('./routes/auth'));
 app.use(require('./routes/dashboard'));
 app.use(require('./routes/products'));
 app.use(require('./routes/providers'));
+=======
+app.use(require('./routes/auth'));
+app.use(require('./routes/dashboard'));
+app.use(require('./routes/products'));
+>>>>>>> fb5b3b6ce7b41d4879e6287e9c2b3b53e4ddcf05
 app.use(require('./routes/users'));
 
 app.use((_req, res) => res.status(404).render('error', { title: '404', message: 'Página no encontrada.' }));

@@ -37,6 +37,7 @@ app.use((req, res, next) => {
 
 app.get('/', (req, res) => res.redirect(req.session.user ? '/dashboard' : '/login'));
 app.use(require('./routes/auth'));
+app.use(require('./routes/mobile-api'));
 app.use(require('./routes/dashboard'));
 app.use(require('./routes/products'));
 app.use(require('./routes/providers'));

@@ -17,12 +17,8 @@ app.use(express.urlencoded({ extended: true }));
 app.use(express.json());
 app.use(methodOverride('_method'));
 app.use(express.static(path.join(__dirname, '..', 'public')));
-
 app.use(session({
-  store: new pgSession({
-    pool,
-    tableName: 'session'
-  }),
+  store: new pgSession({ pool, tableName: 'session' }),
   secret: process.env.SESSION_SECRET || 'cambia-esto',
   resave: false,
   saveUninitialized: false,
@@ -39,32 +35,17 @@ app.use((req, res, next) => {
   next();
 });
 
-app.get('/', (req, res) => {
-  res.redirect(req.session.user ? '/dashboard' : '/login');
-});
-
-app.use(require('./routes/mobile-api'));
+app.get('/', (req, res) => res.redirect(req.session.user ? '/dashboard' : '/login'));
 app.use(require('./routes/auth'));
 app.use(require('./routes/dashboard'));
 app.use(require('./routes/products'));
 app.use(require('./routes/providers'));
 app.use(require('./routes/users'));
 
-app.use((_req, res) => {
-  res.status(404).render('error', {
-    title: '404',
-    message: 'Página no encontrada.'
-  });
-});
-
+app.use((_req, res) => res.status(404).render('error', { title: '404', message: 'Página no encontrada.' }));
 app.use((err, _req, res, _next) => {
   console.error(err);
-  res.status(500).render('error', {
-    title: 'Error',
-    message: 'Ocurrió un error inesperado.'
-  });
+  res.status(500).render('error', { title: 'Error', message: 'Ocurrió un error inesperado.' });
 });
 
-app.listen(PORT, () => {
-  console.log(`Sistema iniciado en http://localhost:${PORT}`);
-});
+app.listen(PORT, () => console.log(`Sistema iniciado en http://localhost:${PORT}`));

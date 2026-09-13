@@ -1,0 +1,71 @@
+<%- include('../partials/header') %>
+<div class="d-flex flex-wrap gap-3 justify-content-between align-items-center mb-4">
+  <div>
+    <h1 class="h3 fw-bold mb-1">Proveedores</h1>
+    <p class="text-secondary mb-0">Precios y lugares de compra por producto en Ceja e Ingavi.</p>
+  </div>
+  <% if(user.rol==='admin'){ %><a href="/proveedores/nuevo" class="btn btn-primary">+ Nuevo registro</a><% } %>
+</div>
+
+<form class="row g-2 mb-4" method="get">
+  <div class="col-lg-6">
+    <input class="form-control form-control-lg" name="q" value="<%= q %>" placeholder="Buscar producto, código o referencia del lugar...">
+  </div>
+  <div class="col-lg-2">
+    <select class="form-select form-select-lg" name="lugar">
+      <option value="">Todos los lugares</option>
+      <option value="Ceja" <%= lugar==='Ceja'?'selected':'' %>>Ceja</option>
+      <option value="Ingavi" <%= lugar==='Ingavi'?'selected':'' %>>Ingavi</option>
+    </select>
+  </div>
+  <div class="col-lg-2">
+    <select class="form-select form-select-lg" name="orden">
+      <option value="producto" <%= orden==='producto'?'selected':'' %>>Por producto</option>
+      <option value="precio_asc" <%= orden==='precio_asc'?'selected':'' %>>Más económico</option>
+      <option value="precio_desc" <%= orden==='precio_desc'?'selected':'' %>>Más caro</option>
+    </select>
+  </div>
+  <div class="col-lg-1"><button class="btn btn-dark btn-lg w-100">Filtrar</button></div>
+  <div class="col-lg-1"><a class="btn btn-outline-secondary btn-lg w-100" href="/proveedores">×</a></div>
+</form>
+
+<div class="card shadow-sm border-0">
+  <div class="table-responsive">
+    <table class="table table-hover align-middle mb-0">
+      <thead class="table-light">
+        <tr><th>Producto</th><th>Lugar</th><th>Precio compra</th><th>Referencia</th><th>Foto lugar</th><th>Ubicación</th><th>Acciones</th></tr>
+      </thead>
+      <tbody>
+      <% if(!providers.length){ %><tr><td colspan="7" class="text-center py-5 text-secondary">No se encontraron registros.</td></tr><% } %>
+      <% providers.forEach(p=>{ %>
+        <tr>
+          <td style="min-width:240px">
+            <div class="d-flex align-items-center gap-3">
+              <% if(p.producto_imagen){ %><img src="<%= p.producto_imagen %>" class="product-thumb" alt=""><% } else { %><div class="product-placeholder">📦</div><% } %>
+              <div><div class="fw-semibold"><%= p.producto %></div><div class="small text-secondary"><%= p.numero || 'Sin código' %><%= p.categoria ? ' · '+p.categoria : '' %></div></div>
+            </div>
+          </td>
+          <td><span class="badge rounded-pill text-bg-<%= p.lugar==='Ceja'?'primary':'success' %>"><%= p.lugar %></span></td>
+          <td class="fw-bold text-nowrap">Bs <%= Number(p.precio_compra).toFixed(2) %><% if(Number(p.precio_compra)===Number(p.precio_minimo)){ %><div><span class="badge text-bg-warning mt-1">💰 Mejor precio</span></div><% } %></td>
+          <td style="min-width:260px"><div><%= p.resena || '-' %></div><div class="small text-secondary mt-1"><%= p.detalle_lugar || '' %></div></td>
+          <td><% if(p.foto_lugar_url){ %><img src="<%= p.foto_lugar_url %>" class="place-thumb" alt="Foto del lugar"><% } else { %><span class="text-secondary small">Sin foto</span><% } %></td>
+          <td>
+            <% if(p.latitud !== null && p.longitud !== null){ %>
+              <a class="btn btn-sm btn-outline-danger" target="_blank" rel="noopener" href="https://www.google.com/maps?q=<%= p.latitud %>,<%= p.longitud %>">📍 Ir a ubicación</a>
+            <% } else { %><span class="text-secondary small">Sin ubicación</span><% } %>
+          </td>
+          <td>
+            <% if(user.rol==='admin'){ %>
+              <div class="d-flex gap-1">
+                <a class="btn btn-sm btn-outline-primary" href="/proveedores/<%= p.id %>/editar">Editar</a>
+                <form method="post" action="/proveedores/<%= p.id %>?_method=DELETE" onsubmit="return confirm('¿Eliminar este registro de proveedor?')"><button class="btn btn-sm btn-outline-danger">Eliminar</button></form>
+              </div>
+            <% } else { %><span class="text-secondary small">Solo lectura</span><% } %>
+          </td>
+        </tr>
+      <% }) %>
+      </tbody>
+    </table>
+  </div>
+</div>
+<%- include('../partials/footer') %>

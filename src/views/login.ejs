@@ -1,0 +1,47 @@
+<!doctype html>
+<html lang="es">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <title>Iniciar sesión | TIENDA CAAPA</title>
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/css/bootstrap.min.css" rel="stylesheet">
+  <link rel="stylesheet" href="/css/app.css">
+</head>
+<body class="login-page">
+  <section class="login-shell">
+    <aside class="login-brand">
+      <div class="brand-icon">🛒</div>
+      <h1>TIENDA CAAPA</h1>
+      <div class="subtitle">Sistema de Gestión de Inventario</div>
+      <div class="brand-line"></div>
+      <p class="brand-copy">Administra productos, precios, stock, proveedores y disponibilidad desde un solo lugar.</p>
+      <div class="brand-features">
+        <div class="brand-feature"><span class="brand-check">✓</span>Control de inventario</div>
+        <div class="brand-feature"><span class="brand-check">✓</span>Gestión de precios</div>
+        <div class="brand-feature"><span class="brand-check">✓</span>Seguimiento de stock</div>
+        <div class="brand-feature"><span class="brand-check">✓</span>Proveedores y ubicaciones</div>
+      </div>
+    </aside>
+    <div class="login-form-side">
+      <div class="login-form-wrap">
+        <div class="eyebrow">BIENVENIDO</div>
+        <h2 class="login-title">Iniciar sesión</h2>
+        <p class="login-sub">Ingresa tus credenciales para acceder al sistema.</p>
+        <% if(error){ %><div class="alert alert-danger"><%= error %></div><% } %>
+        <form method="post" action="/login">
+          <div class="mb-3">
+            <label class="form-label fw-semibold">Correo electrónico</label>
+            <div class="input-shell"><span class="field-icon">✉️</span><input class="form-control" type="email" name="email" autocomplete="username" required></div>
+          </div>
+          <div class="mb-4">
+            <label class="form-label fw-semibold">Contraseña</label>
+            <div class="input-shell"><span class="field-icon">🔒</span><input id="password" class="form-control pe-5" type="password" name="password" autocomplete="current-password" required><button class="password-toggle" type="button" onclick="const p=document.getElementById('password');p.type=p.type==='password'?'text':'password'">👁️</button></div>
+          </div>
+          <button class="btn btn-success w-100 login-submit">Ingresar al sistema &nbsp; →</button>
+        </form>
+        <div class="login-protected"><span>🔐</span><div><strong>Acceso protegido</strong><div class="small text-secondary">Solo personal autorizado.</div></div></div>
+      </div>
+    </div>
+  </section>
+</body>
+</html>

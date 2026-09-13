@@ -1,0 +1,79 @@
+<%- include('../partials/header') %>
+<div class="mb-4"><h1 class="h3 fw-bold"><%= provider && provider.id ? 'Editar proveedor' : 'Nuevo proveedor' %></h1><a href="/proveedores">← Volver</a></div>
+<% if(error){ %><div class="alert alert-danger"><%= error %></div><% } %>
+
+<div class="card shadow-sm border-0"><div class="card-body p-4">
+<form id="providerForm" method="post" enctype="multipart/form-data" action="<%= provider && provider.id ? '/proveedores/'+provider.id+'?_method=PUT' : '/proveedores' %>">
+  <div class="row g-4">
+    <div class="col-12">
+      <label class="form-label fw-semibold">Producto *</label>
+      <div class="position-relative">
+        <input id="productLookup" class="form-control form-control-lg" autocomplete="off" placeholder="Escribe nombre o código del producto..." value="<%= selectedProduct ? ((selectedProduct.numero ? selectedProduct.numero+' · ' : '') + selectedProduct.nombre) : '' %>" required>
+        <input type="hidden" id="productoId" name="producto_id" value="<%= selectedProduct?.id || provider?.producto_id || '' %>">
+        <div id="productResults" class="lookup-results shadow-sm d-none"></div>
+      </div>
+      <div class="form-text">Busca el producto ya existente. No se crea ni modifica el producto desde aquí.</div>
+      <div id="selectedProductCard" class="mt-3 <%= selectedProduct ? '' : 'd-none' %>">
+        <div class="d-flex align-items-center gap-3 p-3 border rounded-3 bg-light">
+          <% if(selectedProduct?.imagen_url){ %><img id="selectedProductImage" src="<%= selectedProduct.imagen_url %>" class="product-thumb" alt=""><% } else { %><img id="selectedProductImage" src="" class="product-thumb d-none" alt=""><% } %>
+          <div><div class="small text-secondary">Producto seleccionado</div><div id="selectedProductName" class="fw-bold"><%= selectedProduct?.nombre || '' %></div></div>
+        </div>
+      </div>
+    </div>
+
+    <div class="col-md-4">
+      <label class="form-label fw-semibold">Lugar *</label>
+      <select class="form-select" name="lugar" required>
+        <option value="">Seleccionar...</option>
+        <option value="Ceja" <%= provider?.lugar==='Ceja'?'selected':'' %>>Ceja</option>
+        <option value="Ingavi" <%= provider?.lugar==='Ingavi'?'selected':'' %>>Ingavi</option>
+      </select>
+      <div class="form-text">Solo se admite un registro Ceja y uno Ingavi por producto.</div>
+    </div>
+    <div class="col-md-4">
+      <label class="form-label fw-semibold">Precio original / compra (Bs) *</label>
+      <input class="form-control" type="number" step="0.01" min="0" name="precio_compra" value="<%= provider?.precio_compra ?? '' %>" required>
+    </div>
+    <div class="col-md-4">
+      <label class="form-label fw-semibold">Foto del lugar</label>
+      <input class="form-control" type="file" name="foto_lugar" accept="image/png,image/jpeg,image/webp,image/gif">
+      <div class="form-text">Máximo 5 MB.</div>
+    </div>
+
+    <div class="col-md-6">
+      <label class="form-label fw-semibold">Reseña corta</label>
+      <input class="form-control" maxlength="300" name="resena" value="<%= provider?.resena || '' %>" placeholder="Ej.: Puesto con mejor precio al por mayor">
+    </div>
+    <div class="col-md-6">
+      <label class="form-label fw-semibold">Descripción detallada del lugar</label>
+      <textarea class="form-control" rows="3" name="detalle_lugar" placeholder="Ej.: Galería..., pasillo..., puesto..., referencia visual..."><%= provider?.detalle_lugar || '' %></textarea>
+    </div>
+
+    <div class="col-12"><hr><h2 class="h5 fw-bold mb-1">Ubicación</h2><p class="text-secondary small">Puedes capturar tu ubicación actual desde el celular o computadora con GPS/permisos de ubicación.</p></div>
+    <div class="col-md-4">
+      <label class="form-label">Latitud</label>
+      <input id="latitud" class="form-control" type="number" step="0.0000001" min="-90" max="90" name="latitud" value="<%= provider?.latitud ?? '' %>" placeholder="-16.5000000">
+    </div>
+    <div class="col-md-4">
+      <label class="form-label">Longitud</label>
+      <input id="longitud" class="form-control" type="number" step="0.0000001" min="-180" max="180" name="longitud" value="<%= provider?.longitud ?? '' %>" placeholder="-68.1500000">
+    </div>
+    <div class="col-md-4 d-flex align-items-end">
+      <button id="getLocationBtn" class="btn btn-outline-danger w-100" type="button">📍 Usar mi ubicación actual</button>
+    </div>
+    <div class="col-12"><div id="locationStatus" class="small text-secondary"></div></div>
+
+    <% if(provider?.foto_lugar_url){ %>
+      <div class="col-12"><div class="small text-secondary mb-2">Foto actual del lugar</div><img src="<%= provider.foto_lugar_url %>" class="place-preview" alt="Foto actual"></div>
+    <% } %>
+  </div>
+
+  <hr class="my-4">
+  <button class="btn btn-primary">Guardar proveedor</button>
+  <a class="btn btn-outline-secondary" href="/proveedores">Cancelar</a>
+</form>
+</div></div>
+<script>
+window.PROVIDER_FORM = true;
+</script>
+<%- include('../partials/footer') %>
